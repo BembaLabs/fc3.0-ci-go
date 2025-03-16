@@ -1,0 +1,13 @@
+name: ci-go-expert-course
+on: [push]
+jobs:
+  check-application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - run: go mod download
+      - run: go test -v ./...
+      - run: go run math.go
