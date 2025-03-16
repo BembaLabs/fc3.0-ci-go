@@ -1,5 +1,8 @@
-name: ci-go-expert-course
-on: [push]
+name: ci-fc3.0-go
+on:
+  pull_request:
+    branches:
+      - dev
 jobs:
   check-application:
     runs-on: ubuntu-latest
