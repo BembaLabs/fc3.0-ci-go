@@ -7,14 +7,24 @@ on:
 jobs:
   check-application:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go: ["1.22.5", "1.23.5"]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.go }}
+          go-version: 1.23.5
       - run: go mod download
       - run: go test -v ./...
       - run: go run main.go
+
+      - name: Set up QEMU ## coloca um nome no passo que está sendo utilizado
+        uses: docker/setup-qemu-action@v3 ## usa a ação de setup do qemu (passo utilizado para rodar imagens de arquiteturas diferentes)
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 ## usa a ação de setup do buildx (passo utilizado para rodar imagens de arquiteturas diferentes)
+
+      - name: Build and push
+        id: docker_build ## id do passo
+        uses: docker/build-push-action@v6 ## usa a ação de build e push
+        with:
+          push: false ## indica que a imagem será enviada para o dockerhub
+          tags: douglasandrade92/fc3.0-ci-go:latest ## tag da imagem
